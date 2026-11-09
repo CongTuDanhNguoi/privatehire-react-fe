@@ -1,0 +1,5 @@
+[
+  {"nodeId": "6:820", "name": "Screen 1 — Normal Login", "component": "Screen1NormalLogin", "file": "login/Screen1NormalLogin.tsx", "width": 390, "height": 884},
+  {"nodeId": "6:957", "name": "Screen 2 — Invalid Login", "component": "Screen2InvalidLogin", "file": "login/Screen2InvalidLogin.tsx", "width": 390, "height": 884},
+  {"nodeId": "6:883", "name": "Screen 2A — Empty Fields Validation", "component": "Screen2AEmptyFieldsValidation", "file": "login/Screen2AEmptyFieldsValidation.tsx", "width": 390, "height": 884}
+]
