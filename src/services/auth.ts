@@ -49,7 +49,12 @@ export type LoginResult =
   | { ok: false; reason: "invalid" }
   | { ok: false; reason: "locked"; minutesLeft: number };
 
-export type RegisterResult = { ok: true; user: SessionUser } | { ok: false; errors: RegistrationErrors };
+export interface RegisteredUser {
+  email: string;
+  fullName: string;
+}
+
+export type RegisterResult = { ok: true; user: RegisteredUser } | { ok: false; errors: RegistrationErrors };
 
 // ---------- tiện ích ----------
 const normalizeEmail = (email: string) => (email ?? "").trim().toLowerCase();
@@ -119,7 +124,7 @@ export async function seedDemoAccount(): Promise<void> {
   writeJson(USERS_KEY, users);
 }
 
-// Đăng ký: kiểm tra lỗi -> lưu tài khoản -> tự đăng nhập luôn
+// Đăng ký: kiểm tra lỗi -> lưu tài khoản -> KHÔNG tự đăng nhập (SCRUM-12 fix)
 export async function registerUser(form: RegistrationForm): Promise<RegisterResult> {
   const errors = validateRegistration(form, { isEmailTaken: isEmailRegistered });
   if (Object.keys(errors).length > 0) return { ok: false, errors };
@@ -135,7 +140,16 @@ export async function registerUser(form: RegistrationForm): Promise<RegisterResu
     createdAt: new Date().toISOString(),
   };
   writeJson(USERS_KEY, [...getUsers(), user]);
-  return { ok: true, user: startSession(user) };
+
+  // SCRUM-12 Requirement: Do not automatically start an authenticated session.
+  // Newly registered user must navigate to /login and enter their credentials.
+  return {
+    ok: true,
+    user: {
+      email: user.email,
+      fullName: user.fullName,
+    },
+  };
 }
 
 // ---------- đăng nhập ----------

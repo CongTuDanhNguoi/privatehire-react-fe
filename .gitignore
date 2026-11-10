@@ -3,3 +3,4 @@ dist/
 selftest/
 *.log
 .env
+test-output*/

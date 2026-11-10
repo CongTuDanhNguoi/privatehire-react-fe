@@ -7,7 +7,7 @@
 // Chỉ thay: chữ tĩnh -> <input>, div nút -> <button>, thêm state + kiểm tra lỗi.
 // =============================================================
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { validateEmail } from "../validation/rules";
 import { validateLogin, LOGIN_MESSAGES, type LoginErrors } from "../validation/loginValidation";
 import { loginUser } from "../services/auth";
@@ -52,10 +52,12 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialEmail = (location.state as { email?: string } | null)?.email || "";
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
   const [banner, setBanner] = useState("");
